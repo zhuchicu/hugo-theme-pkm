@@ -1,0 +1,567 @@
+<!-- 全新独立的目录切换按钮 -->
+<!-- 目录切换系统 - 点击按钮显示目录并隐藏按钮 -->
+
+<!-- 目录切换按钮 - 修复位移问题 -->
+<div 
+  id="toc-toggle" 
+  onclick="showToc()"
+  style="position: fixed; left: 30px; top: 50%; transform: translateY(-50%); width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 9999; border-radius: 50%; font-weight: bold; font-size: 24px; box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); border: 2px solid rgba(255, 255, 255, 0.8); transition: all 0.3s ease;"
+  onmouseover="this.style.transform='translateY(-50%) scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(102, 126, 234, 0.5)';" 
+  onmouseout="this.style.transform='translateY(-50%) scale(1)'; this.style.boxShadow='0 6px 20px rgba(102, 126, 234, 0.4);'" 
+  onmousedown="this.style.transform='translateY(-50%) scale(0.95)'; this.style.boxShadow='0 4px 15px rgba(102, 126, 234, 0.3);'" 
+  onmouseup="this.style.transform='translateY(-50%) scale(1.1)'; this.style.boxShadow='0 8px 25px rgba(102, 126, 234, 0.5);'" 
+  title="打开目录"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</div>
+
+<!-- 目录侧边栏 - 优化样式 -->
+<aside 
+  id="toc-sidebar" 
+  style="position: fixed; left: -300px; top: 0; width: 300px; height: 100vh; background-color: #ffffff; z-index: 9998; overflow-y: auto; border-right: 1px solid #e0e0e0; transition: left 0.3s ease-in-out; box-shadow: 2px 0 10px rgba(0,0,0,0.1);"
+>
+  <div style="padding: 24px; border-bottom: 1px solid #f0f0f0; background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);">
+    <div style="font-size: 20px; font-weight: 600; margin-bottom: 8px; color: #333;">文章目录</div>
+    <button 
+      onclick="hideToc()"
+      style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.8); border: none; cursor: pointer; color: #666; padding: 8px; border-radius: 50%; transition: all 0.2s ease;"
+      title="关闭目录"
+      onmouseover="this.style.backgroundColor='rgba(255,255,255,1)'; this.style.color='#333'; this.style.transform='scale(1.1)';" 
+      onmouseout="this.style.backgroundColor='rgba(255,255,255,0.8)'; this.style.color='#666'; this.style.transform='scale(1)';" 
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+  <nav style="padding: 24px;">
+    {{ if .TableOfContents }}
+      <div class="toc-content" style="font-size: 15px; line-height: 1.8;">
+        <!-- 处理目录，添加层级控制功能 -->
+        <div class="collapsible-toc">
+          {{ .TableOfContents }}
+        </div>
+      </div>
+    {{ else }}
+      <div style="color: #999; text-align: center; padding: 40px 20px; font-size: 14px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-bottom: 16px; opacity: 0.3;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <p>本文没有目录</p>
+      </div>
+    {{ end }}
+  </nav>
+  <!-- 目录样式定制 - 优化版 -->
+  <style type="text/css">
+    /* 目录样式 */
+    .toc-content ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    .toc-content li {
+      margin-bottom: 2px; /* 进一步减小间距，使目录更紧凑 */
+      transition: all 0.2s ease;
+    }
+    .toc-content a {
+      display: block;
+      padding: 4px 10px; /* 减小内边距，使目录更紧凑 */
+      color: #555;
+      text-decoration: none;
+      border-radius: 6px; /* 增大圆角，更现代化 */
+      transition: all 0.3s ease; /* 延长过渡时间，使动画更平滑 */
+      font-weight: 400;
+      position: relative;
+    }
+    .toc-content a:hover {
+      color: #667eea;
+      background-color: #f5f7ff;
+      transform: translateX(4px);
+    }
+    
+    /* 目录层级样式 - H2级别 - 主标题，使用明显视觉区分 */
+    .toc-content > ul > li {
+      margin-bottom: 8px; /* 增加H2项之间的垂直间距 */
+    }
+    .toc-content > ul > li > a {
+      font-weight: 700; /* 加重H2字体 */
+      padding: 10px 12px 10px 48px; /* 增加上下内边距，更明显的左侧缩进 */
+      position: relative;
+      cursor: pointer;
+      font-size: 16px; /* 增大H2字体 */
+      color: #2d3748; /* 更深的颜色 */
+      border-left: 4px solid #667eea; /* 明显的蓝色边框 */
+      background-color: #f0f4ff; /* 浅色背景，明显区分 */
+      margin-bottom: 2px;
+    }
+    .toc-content > ul > li > a:hover {
+      background-color: #e6ebff; /* 悬停时背景色变深 */
+    }
+    /* H2标题前的展开/折叠指示器 - 使用更明显的样式 */
+    .toc-content > ul > li > a::before {
+      content: '▶'; /* 使用箭头图标作为H2指示器 */
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      transition: all 0.3s ease;
+      color: #667eea;
+      z-index: 1;
+    }
+    .toc-content > ul > li.expanded > a::before {
+      transform: translateY(-50%) rotate(90deg);
+      color: #5a67d8; /* 展开时变色 */
+    }
+    
+    /* H2序号样式 */
+    .toc-content > ul > li > a .section-number {
+      position: absolute;
+      left: 32px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: 700;
+      color: #667eea;
+      min-width: 30px;
+      text-align: right;
+      margin-right: 8px;
+    }
+    .toc-content > ul > li > a .section-title {
+      margin-left: 30px;
+    }
+    
+    /* 目录层级样式 - H3级别 - 子标题，中等强度视觉区分 */
+    .toc-content > ul > li > ul {
+      margin-top: 6px; /* H2和H3之间的间距 */
+      padding-left: 12px; /* 为H3添加额外的左侧空间 */
+    }
+    .toc-content > ul > li > ul > li > a {
+      font-weight: 600; /* 中等字重 */
+      padding: 8px 10px 8px 60px; /* 更大的缩进，与H2明显区分 */
+      position: relative;
+      cursor: pointer;
+      font-size: 14px;
+      color: #4a5568;
+      border-left: 3px solid #cbd5e0;
+      background-color: #f7fafc;
+    }
+    .toc-content > ul > li > ul > li > a:hover {
+      background-color: #edf2f7;
+      border-left-color: #a0aec0;
+    }
+    /* H3标题前的展开/折叠指示器 - 使用不同样式 */
+    .toc-content > ul > li > ul > li > a::before {
+      content: '▸'; /* 使用不同的箭头作为H3指示器 */
+      position: absolute;
+      left: 32px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      transition: all 0.3s ease;
+      color: #94a3b8;
+      z-index: 1;
+    }
+    .toc-content > ul > li > ul > li.expanded > a::before {
+      transform: translateY(-50%) rotate(90deg);
+      color: #667eea;
+    }
+    
+    /* H3序号样式 */
+    .toc-content > ul > li > ul > li > a .section-number {
+      position: absolute;
+      left: 48px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: 600;
+      color: #94a3b8;
+      min-width: 45px;
+      text-align: right;
+      margin-right: 8px;
+    }
+    .toc-content > ul > li > ul > li > a .section-title {
+      margin-left: 45px;
+    }
+    
+    /* 目录层级样式 - H4级别 - 次级标题，柔和的视觉区分 */
+    .toc-content > ul > li > ul > li > ul {
+      margin-top: 4px; /* H3和H4之间的间距 */
+      padding-left: 16px; /* 为H4添加更多的左侧空间 */
+    }
+    .toc-content > ul > li > ul > li > ul > li > a {
+      font-weight: 400;
+      padding: 6px 10px 6px 72px; /* 最大的缩进，与H3明显区分 */
+      font-size: 13px;
+      color: #718096;
+      line-height: 1.6;
+      font-style: normal; /* 移除斜体，使用其他方式区分 */
+      background-color: #ffffff;
+      border-left: 2px solid #e2e8f0;
+    }
+    .toc-content > ul > li > ul > li > ul > li > a:hover {
+      background-color: #f7fafc;
+      border-left-color: #cbd5e0;
+    }
+    /* H4序号样式 */
+    .toc-content > ul > li > ul > li > ul > li > a .section-number {
+      position: absolute;
+      left: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #cbd5e0;
+      min-width: 60px;
+      text-align: right;
+      margin-right: 8px;
+    }
+    .toc-content > ul > li > ul > li > ul > li > a .section-title {
+      margin-left: 60px;
+    }
+    
+    /* 子列表样式 */
+    .toc-content ul ul {
+      padding-left: 0;
+      margin-top: 2px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .toc-content li.expanded > ul {
+      max-height: 2000px;
+    }
+    /* 当前活跃章节高亮 - 增强视觉效果 */
+    .toc-content a.active {
+      color: #667eea;
+      font-weight: 600;
+      background-color: #eef2ff;
+      border-left: 3px solid #667eea;
+      box-shadow: 0 2px 6px rgba(102, 126, 234, 0.15);
+      transform: translateX(2px);
+    }
+    /* 无目录时的样式 */
+    .toc-content p {
+      margin: 0;
+    }
+    /* 目录滚动条样式优化 */
+    #toc-sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+    #toc-sidebar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    #toc-sidebar::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 3px;
+    }
+    #toc-sidebar::-webkit-scrollbar-thumb:hover {
+      background: #a1a1a1;
+    }
+  </style>
+</aside>
+
+<!-- 遮罩层 -->
+<div 
+  id="toc-overlay" 
+  onclick="hideToc()"
+  style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.5); z-index: 9997; opacity: 0; pointer-events: none; transition: opacity 0.3s ease-in-out;"
+></div>
+
+<!-- JavaScript函数 - 实现点击按钮显示目录并隐藏按钮 -->
+<script type="text/javascript">
+  // 显示目录并隐藏切换按钮
+  function showToc() {
+    console.log('显示目录并隐藏按钮');
+    
+    // 获取所有必要元素
+    const sidebar = document.getElementById('toc-sidebar');
+    const overlay = document.getElementById('toc-overlay');
+    const toggleBtn = document.getElementById('toc-toggle');
+    
+    if (sidebar && overlay && toggleBtn) {
+      // 显示侧边栏和遮罩层
+      sidebar.style.left = '0px';
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+      document.body.style.overflow = 'hidden';
+      
+      // 隐藏切换按钮
+      toggleBtn.style.display = 'none';
+      console.log('目录已显示，按钮已隐藏');
+    } else {
+      console.error('未找到目录元素');
+    }
+  }
+  
+  // 隐藏目录并显示切换按钮
+  function hideToc() {
+    console.log('隐藏目录并显示按钮');
+    
+    // 获取所有必要元素
+    const sidebar = document.getElementById('toc-sidebar');
+    const overlay = document.getElementById('toc-overlay');
+    const toggleBtn = document.getElementById('toc-toggle');
+    
+    if (sidebar && overlay && toggleBtn) {
+      // 隐藏侧边栏和遮罩层
+      sidebar.style.left = '-300px';
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+      document.body.style.overflow = '';
+      
+      // 显示切换按钮
+      toggleBtn.style.display = 'flex';
+      console.log('目录已隐藏，按钮已显示');
+    }
+  }
+  
+  // 添加ESC键支持
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      console.log('ESC键按下，隐藏目录');
+      hideToc();
+    }
+  });
+  
+  // 页面加载完成后初始化
+  window.onload = function() {
+    console.log('TOC系统加载完成');
+    
+    // 确保按钮在页面加载时可见
+    const toggleBtn = document.getElementById('toc-toggle');
+    if (toggleBtn) {
+      toggleBtn.style.display = 'flex';
+      toggleBtn.style.visibility = 'visible';
+      toggleBtn.style.pointerEvents = 'auto';
+    }
+    
+    // 初始化滚动监听，实现当前阅读位置的自动高亮
+    initScrollSpy();
+    
+    console.log('按钮初始状态已设置，滚动监听已初始化');
+  };
+  
+  // 实现滚动监听，自动高亮当前阅读章节
+  function initScrollSpy() {
+    // 监听滚动事件
+    window.addEventListener('scroll', throttle(highlightActiveSection, 100));
+    
+    // 初始加载时执行一次
+    highlightActiveSection();
+  }
+  
+  // 高亮当前阅读的章节
+  function highlightActiveSection() {
+    // 获取所有目录链接
+    const tocLinks = document.querySelectorAll('.toc-content a[href^="#"]');
+    if (!tocLinks.length) return;
+    
+    // 获取所有锚点元素
+    const sections = [];
+    tocLinks.forEach(link => {
+      const id = link.getAttribute('href');
+      const section = document.querySelector(id);
+      if (section) {
+        sections.push({ id, element: section });
+      }
+    });
+    
+    // 确定当前可视区域的章节
+    let currentSectionId = '';
+    const scrollPosition = window.scrollY + 100; // 添加偏移量，提升用户体验
+    
+    // 从底部向上查找，找到第一个在可视区域的章节
+    for (let i = sections.length - 1; i >= 0; i--) {
+      const section = sections[i];
+      const sectionTop = section.element.offsetTop;
+      
+      if (scrollPosition >= sectionTop) {
+        currentSectionId = section.id;
+        break;
+      }
+    }
+    
+    // 移除所有active类，并为当前章节添加active类
+    tocLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === currentSectionId) {
+        link.classList.add('active');
+        // 确保当前高亮项在可视区域内
+        link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        
+        // 自动展开包含当前章节的所有父级
+        let parentLi = link.closest('li');
+        while (parentLi) {
+          parentLi.classList.add('expanded');
+          parentLi = parentLi.parentElement.closest('li');
+        }
+      }
+    });
+  }
+  
+  // 为目录项添加层级序号
+  function addSectionNumbers() {
+    // 获取所有H2级别的目录项
+    const h2Items = document.querySelectorAll('.toc-content > ul > li');
+    
+    // 为H2级别添加序号
+    h2Items.forEach((h2Item, h2Index) => {
+      const link = h2Item.querySelector('a');
+      if (link && link.firstChild && link.firstChild.nodeType === 3) {
+        // 获取原始标题文本
+        const originalText = link.firstChild.textContent.trim();
+        
+        // 创建序号元素
+        const numberSpan = document.createElement('span');
+        numberSpan.className = 'section-number';
+        numberSpan.textContent = (h2Index + 1) + '.';
+        
+        // 创建标题元素
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'section-title';
+        titleSpan.textContent = originalText;
+        
+        // 清空链接内容并添加新元素
+        link.innerHTML = '';
+        link.appendChild(numberSpan);
+        link.appendChild(titleSpan);
+      }
+      
+      // 获取当前H2下的所有H3级别目录项
+      const h3Items = h2Item.querySelectorAll('> ul > li');
+      
+      // 为H3级别添加序号
+      h3Items.forEach((h3Item, h3Index) => {
+        const link = h3Item.querySelector('a');
+        if (link && link.firstChild && link.firstChild.nodeType === 3) {
+          // 获取原始标题文本
+          const originalText = link.firstChild.textContent.trim();
+          
+          // 创建序号元素
+          const numberSpan = document.createElement('span');
+          numberSpan.className = 'section-number';
+          numberSpan.textContent = (h2Index + 1) + '.' + (h3Index + 1) + '.';
+          
+          // 创建标题元素
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'section-title';
+          titleSpan.textContent = originalText;
+          
+          // 清空链接内容并添加新元素
+          link.innerHTML = '';
+          link.appendChild(numberSpan);
+          link.appendChild(titleSpan);
+        }
+        
+        // 获取当前H3下的所有H4级别目录项
+        const h4Items = h3Item.querySelectorAll('> ul > li');
+        
+        // 为H4级别添加序号
+        h4Items.forEach((h4Item, h4Index) => {
+          const link = h4Item.querySelector('a');
+          if (link && link.firstChild && link.firstChild.nodeType === 3) {
+            // 获取原始标题文本
+            const originalText = link.firstChild.textContent.trim();
+            
+            // 创建序号元素
+            const numberSpan = document.createElement('span');
+            numberSpan.className = 'section-number';
+            numberSpan.textContent = (h2Index + 1) + '.' + (h3Index + 1) + '.' + (h4Index + 1) + '.';
+            
+            // 创建标题元素
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'section-title';
+            titleSpan.textContent = originalText;
+            
+            // 清空链接内容并添加新元素
+            link.innerHTML = '';
+            link.appendChild(numberSpan);
+            link.appendChild(titleSpan);
+          }
+        });
+      });
+    });
+  }
+  
+  // 初始化目录折叠/展开功能
+  function initTocCollapsible() {
+    // 为所有H2和H3级别的目录项添加点击事件
+    const h2Items = document.querySelectorAll('.toc-content > ul > li');
+    const h3Items = document.querySelectorAll('.toc-content > ul > li > ul > li');
+    
+    // 处理H2级别
+    h2Items.forEach(item => {
+      const link = item.querySelector('a');
+      if (link && item.querySelector('ul')) {
+        // 默认折叠所有H2
+        item.classList.remove('expanded');
+        
+        // 添加点击事件
+        link.addEventListener('click', function(e) {
+          // 如果点击的是H2标题而不是链接的跳转功能
+          if (e.target === this || e.target === this.querySelector('.section-title')) {
+            e.preventDefault();
+            item.classList.toggle('expanded');
+          }
+        });
+      }
+    });
+    
+    // 处理H3级别
+    h3Items.forEach(item => {
+      const link = item.querySelector('a');
+      if (link && item.querySelector('ul')) {
+        // 默认折叠所有H3
+        item.classList.remove('expanded');
+        
+        // 添加点击事件
+        link.addEventListener('click', function(e) {
+          // 如果点击的是H3标题而不是链接的跳转功能
+          if (e.target === this || e.target === this.querySelector('.section-title')) {
+            e.preventDefault();
+            item.classList.toggle('expanded');
+          }
+        });
+      }
+    });
+  }
+  
+  // 页面加载完成后初始化
+  window.onload = function() {
+    console.log('TOC系统加载完成');
+    
+    // 确保按钮在页面加载时可见
+    const toggleBtn = document.getElementById('toc-toggle');
+    if (toggleBtn) {
+      toggleBtn.style.display = 'flex';
+      toggleBtn.style.visibility = 'visible';
+      toggleBtn.style.pointerEvents = 'auto';
+    }
+    
+    // 初始化滚动监听，实现当前阅读位置的自动高亮
+    initScrollSpy();
+    
+    // 初始化目录折叠/展开功能
+    initTocCollapsible();
+    
+    // 添加目录层级序号
+    addSectionNumbers();
+    
+    console.log('按钮初始状态已设置，滚动监听已初始化，目录折叠功能已初始化，层级序号已添加');
+  }
+  
+  // 节流函数，避免滚动事件触发过于频繁
+  function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+      const args = arguments;
+      const context = this;
+      if (!inThrottle) {
+        func.apply(context, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }
+</script>

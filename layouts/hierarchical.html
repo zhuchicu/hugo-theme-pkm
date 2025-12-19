@@ -1,0 +1,69 @@
+{{ define "main" }}
+  <div class="hierarchical-container">
+    <div class="controls">
+        <button id="toggleAllBranches">展开所有</button>
+    </div>
+
+    <div class="vertical-tree">
+        <div class="tree" id="tree-container">
+            <ul>
+                <li>
+                    <div class="tree-node root-node">
+                        <a href="{{ "categories/" | relLangURL | urlize }}">
+                            Root<sup>{{ len site.Taxonomies.categories }}</sup>
+                        </a>
+                    </div>
+                    <ul>
+                        {{ template "branch-node" . }}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </div>
+{{ end }}
+
+{{ define "branch-node" }}
+    {{ $categories := site.Taxonomies.categories }}
+    {{ range $category, $pages := $categories }}
+        {{ $scratch := newScratch }}
+        {{ $scratch.Set "tagMap" dict }}
+        
+        {{/* 收集该分类下所有标签 */}}
+        {{ range $pages }}
+            {{ range .GetTerms "tags" }}
+                {{ $tagName := .Title }}
+                {{ $current := $scratch.Get "tagMap" }}
+                {{ if isset $current $tagName }}
+                    {{ $count := index $current $tagName | add 1 }}
+                    {{ $scratch.SetInMap "tagMap" $tagName $count }}
+                {{ else }}
+                    {{ $scratch.SetInMap "tagMap" $tagName 1 }}
+                {{ end }}
+            {{ end }}
+        {{ end }}
+
+        {{ $tagMap := $scratch.Get "tagMap" }}
+        <li>
+            <div class="tree-node branch-node" data-branch="branch-{{ $category | urlize }}">
+                <a href="{{ printf "/categories/%s/" ($category | urlize) | relLangURL }}">
+                    {{ $category }}<sup>{{ len $pages }}</sup>
+                </a>
+                <span class="toggle-icon">▶</span>
+            </div>
+            {{ if $tagMap }}
+            <ul style="display: none;">
+                {{ range $tag, $count := $tagMap }}
+                <li>
+                    <div class="tree-node leaf-node">
+                        <a href="{{ printf "/tags/%s/" ($tag | urlize) | relLangURL }}">
+                        {{ $tag }}<sup>{{ $count }}</sup>
+                        </a>
+                    </div>
+                </li>
+                {{ end }}
+            </ul>
+            {{ end }}
+        </li>
+    {{ end }}
+{{ end }}

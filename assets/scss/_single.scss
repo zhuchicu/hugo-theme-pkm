@@ -1,0 +1,304 @@
+.content-article {
+  max-width: 800px;
+  margin: 0 auto;
+//   padding: 2rem;
+
+  h1 {
+    font-size: 40px;
+  }
+}
+
+/* 文章元信息样式 */
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  // margin: 1.5rem 0;
+  // padding: 1rem 1.5rem;
+  // background-color: #f8fafc;
+  // border-radius: 8px;
+  // border-left: 4px solid #3b82f6;
+}
+
+/* 单个元信息项样式 */
+.meta-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #4b5563;
+  transition: all 0.2s ease;
+}
+
+/* 元信息图标样式 */
+.meta-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.5rem;
+  color: #6366f1;
+  flex-shrink: 0;
+}
+
+/* 元信息标签样式 */
+.meta-label {
+  font-weight: 500;
+  color: #6b7280;
+  margin-right: 0.3rem;
+}
+
+/* 元信息值样式 */
+.meta-value {
+  font-weight: 400;
+  color: #374151;
+}
+
+/* 更新时间特殊样式 */
+.update-date .meta-value {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* 阅读时间样式 */
+.reading-time .meta-icon {
+  color: #8b5cf6;
+}
+
+/* 悬停效果 */
+// .meta-item:hover {
+//   transform: translateY(-1px);
+// }
+
+.meta-item:hover .meta-icon {
+  color: #4f46e5;
+}
+
+/* 时间标签样式 */
+time.meta-value {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  // background-color: rgba(59, 130, 246, 0.1);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* 更新时间标签特殊样式 */
+time.meta-value.updated {
+  // background-color: rgba(220, 38, 38, 0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .article-meta {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .meta-item {
+    font-size: 0.9rem;
+  }
+}
+
+/* 文章标签样式 */
+.article-tags {
+  
+  // margin: 1.5rem 0;
+  // padding: 1rem 1.5rem;
+  // background-color: #f8fafc;
+  // border-radius: 8px;
+  // border-left: 4px solid #6366f1;
+}
+
+/* 标签标题样式 */
+.tags-label {
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+/* 标签列表样式 */
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* 单个标签样式 */
+.tags-list .tag {
+  color: var(--text-color);
+  background-color: var(--code-bg-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  // padding: 0.25rem 0.75rem;
+  // font-weight: 400;
+  // border-radius: 16px;
+}
+
+/* 标签悬停效果 */
+.tags-list .tag:hover {
+  background-color: #ede9fe;
+  color: #6d28d9;
+  border-color: #c4b5fd;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(109, 40, 217, 0.15);
+}
+
+/* 标签聚焦效果 */
+.tags-list .tag:focus {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+/* 响应式标签样式 */
+@media (max-width: 768px) {
+  .article-tags {
+    padding: 0.75rem 1rem;
+  }
+  
+  .tags-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .tags-list .tag {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+  }
+}
+
+.content-body {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #333;
+
+  h1 {
+    font-size: 40px;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+
+  h3 {
+    font-size: 28px;
+  }
+
+  h4 {
+    font-size: 24px;
+  }
+
+  h5 {
+    font-size: 20px;
+  }
+
+  h6 {
+    font-size: 18px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    // margin: 1.5em 0 0.5em 0;
+    color: #222;
+  }
+  
+  p {
+    margin: 1em 0;
+  }
+  
+  a {
+    color: #0066cc;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // ===== 复制按钮调整位置 =====
+  .copy-code-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e5e7eb;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8em;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+  }
+
+  .highlight:hover .copy-code-button {
+    opacity: 1;
+  }
+}
+
+.content-body ul, .content-body ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.content-body li {
+  margin: 0.5rem 0;
+}
+
+.content-body code {
+  background-color: #edf2f7;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
+.content-body pre {
+  background-color: #edf2f7;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.content-body pre code {
+  background: none;
+  padding: 0;
+}
+
+.content-body blockquote {
+  border-left: 4px solid #e2e8f0;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #718096;
+  font-style: italic;
+}
+
+.content-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.content-body th, .content-body td {
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.content-body th {
+  background-color: #f7fafc;
+  font-weight: bold;
+}
+
+.content-body img {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}

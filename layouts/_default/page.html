@@ -1,0 +1,91 @@
+{{ define "main" }}
+  {{ if eq .Type "posts" }}
+    {{ partial "toc.html" . }}
+  {{ end }}
+
+  <article class="content-article">
+    <header class="content-article-header">
+      <h1 id="h1">{{ .Title }}</h1>
+      <div class="article-meta">
+        <!-- 发布时间 -->
+        <div class="meta-item publish-date">
+          <span class="meta-label">发布时间：</span>
+          <time datetime="{{ .Date.Format "2006-01-02T15:04:05-07:00" }}" class="meta-value">
+            {{ .Date.Format "2006-01-02 15:04" }}
+          </time>
+        </div>
+        
+        <!-- 仅当内容被修改后（Lastmod > Date）才显示更新时间 -->
+        {{ if gt .Lastmod .Date }}
+        <div class="meta-item update-date">
+          <span class="meta-label">更新时间：</span>
+          <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" }}" class="meta-value updated">
+            {{ .Lastmod.Format "2006-01-02 15:04" }}
+          </time>
+        </div>
+        {{ end }}
+        
+        <!-- 阅读时间 -->
+        {{ if .ReadingTime }}
+        <div class="meta-item reading-time">
+          <span class="meta-value">{{ .ReadingTime }} 分钟阅读</span>
+        </div>
+        {{ end }}
+      </div>
+      
+      <!-- 显示当前页面所有'tags'分类法的标签-->
+      {{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}
+    </header>
+
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+
+    <div class="post-footer">
+      {{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+      {{- if and (gt (len $pages) 1) (in $pages . ) }}
+      <nav class="post-pagination pagination">
+        {{- with $pages.Next . }}
+        <a class="prev" href="{{ .Permalink }}">
+          <!-- <span class="title">« {{ i18n "prev_page" }}</span> -->
+          <span class="title">« 上一篇</span>
+          <br>
+          <span>{{- .Name -}}</span>
+        </a>
+        {{- end }}
+        {{- with $pages.Prev . }}
+        <a class="next" href="{{ .Permalink }}">
+          <!-- <span class="title">{{ i18n "next_page" }} »</span> -->
+          <span class="title">下一篇 »</span>
+          <br>
+          <span>{{- .Name -}}</span>
+        </a>
+        {{- end }}
+      </nav>
+      {{- end }}
+    </div>
+  </article>
+{{ end }}
+
+
+{{ define "PostTime" }}
+  {{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+  {{ $dateHuman := .Date | time.Format ":date_long" }}
+  <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+
+  <!-- 输出页面所有数据 -->
+  <!-- <pre>{{ printf "%#v" . }}</pre>
+  <pre>{{ printf "%s" .Lastmod }}</pre>
+  <pre>{{ printf "%s" .Date }}</pre> -->
+
+  <!-- 显示创建时间 -->
+  <p>发布时间：{{ .Date.Format "2006-01-02 15:04:05" }}</p>
+
+  <!-- 当没有设置lastmod且enableGitInfo为false时，这个值就是fs.ModTime -->
+  <pre>Lastmod (likely from fs.ModTime): {{ .Lastmod }}</pre>
+
+  <!-- 仅当内容被修改后（Lastmod > Date）才显示更新时间 -->
+  {{ if gt .Lastmod .Date }}
+    <p>更新时间：{{ .Lastmod.Format "2006-01-02 15:04:05" }}</p>
+  {{ end }}
+{{ end }}

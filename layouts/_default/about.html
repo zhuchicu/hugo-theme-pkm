@@ -1,0 +1,64 @@
+{{ define "main" }}
+<article class="about">
+  <header>
+    <h1>{{ .Title }}</h1>
+  </header>
+  <section>
+    {{ .Content }}
+
+    <div class="step-item">
+        <h2 class="text-xl font-semibold text-primary mb-3 flex items-center">
+            <span class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm">1</span>
+            运行配置脚本
+        </h2>
+        <p class="mb-3">打开终端，进入文件所在目录 <code>themes/hugo-pkm/</code>，执行以下命令：</p>
+        <div class="code-container">
+            <div class="code-lines">
+                <div class="line-numbers">
+                    <span class="line-number">1</span>
+                    <span class="line-number">2</span>
+                </div>
+                <div class="code-content">
+                    chmod +x setup-hugo-aliases.sh<br>
+                    ./setup-hugo-aliases.sh
+                </div>
+            </div>
+        </div>
+        <p class="text-gray-600 text-sm">
+            <i class="fa fa-info-circle text-primary mr-1"></i>
+            脚本会自动检测你的终端类型，并配置别名。
+        </p>
+        <p class="text-gray-600 text-sm">
+            <i class="fa fa-info-circle text-primary mr-1"></i>
+            如需修改或添加别名，编辑 hugo-aliases.txt 文件，然后重新运行脚本。
+        </p>
+        <div class="code-container">
+            <div class="code-lines">
+                <div class="line-numbers">
+                    <span class="line-number">1</span>
+                    <span class="line-number">2</span>
+                    <span class="line-number">3</span>
+                    <span class="line-number">4</span>
+                    <span class="line-number">5</span>
+                    <span class="line-number">6</span>
+                    <span class="line-number">7</span>
+                    <span class="line-number">8</span>
+                </div>
+                <div class="code-content">
+                    # 创建文章（posts目录）<br>
+                    hugo-new-post 文章名称<br><br>
+                    # 创建笔记（notes目录）<br>
+                    hugo-new-note 笔记名称<br><br>
+                    # 启动服务<br>
+                    run-hugo
+                </div>
+            </div>
+        </div>
+        <p class="text-gray-600 text-sm">
+            <i class="fa fa-info-circle text-primary mr-1"></i>
+            可以查看 ~/.bashrc 或 ~/.zshrc 文件，确认别名已添加。
+        </p>
+    </div>
+  </section>
+</article>
+{{ end }}

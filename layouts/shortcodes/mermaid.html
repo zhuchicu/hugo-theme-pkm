@@ -1,0 +1,19 @@
+{{- $id := printf "mermaid-%d" .Ordinal -}}
+<script src="{{ "mermaid.min.js" | relURL }}"></script>
+{{ with resources.Get "mermaid.json" }}
+  <script>mermaid.initialize({{ .Content | safeJS }})</script>
+{{ end }}
+
+<!-- 导入 mermaid.js 未生效-->
+<!-- {{ $mermaidJS := resources.Get "js/mermaid.js" | minify | fingerprint }}
+<script defer src="{{ $mermaidJS.RelPermalink }}"></script> -->
+
+<div class="mermaid-container" id="{{ $id }}">
+    <div class="mermaid">
+        {{ .Inner }}
+    </div>
+    <div class="mermaid-toolbar">
+        <button class="mermaid-btn" onclick="downloadMermaidSVG('{{ $id }}')" title="下载SVG">📥</button>
+        <button class="mermaid-btn" onclick="copyMermaidCode('{{ $id }}')" title="复制代码">📋</button>
+    </div>
+</div>

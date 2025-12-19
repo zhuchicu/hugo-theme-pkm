@@ -1,0 +1,73 @@
+/* Header Styles */
+.site-header {
+  width: 100%;
+  margin-top: 0;
+  // margin-bottom: calc(var(--spacing-unit) * 2);
+  padding-top: 0;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+  padding-top: 0;
+  // padding-bottom: var(--spacing-unit);
+  line-height: var(--line-height);
+}
+
+.site-title {
+  margin: 0;
+}
+
+.site-title h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.site-title h1 a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.site-title h1 a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+/* Navigation Styles */
+.site-nav {
+  display: flex;
+  align-items: center;
+}
+
+.site-nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-nav li {
+  margin: 0 0 0 calc(var(--spacing-unit) * 1.5);
+}
+
+.site-nav a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.site-nav a:hover {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+/* Active navigation link */
+.nav a.active {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}

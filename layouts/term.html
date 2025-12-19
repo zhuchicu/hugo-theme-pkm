@@ -1,7 +1,49 @@
 {{ define "main" }}
   <h1>{{ .Title }}</h1>
   {{ .Content }}
-  {{ range .Pages }}
-    <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
-  {{ end }}
+  
+  <!-- 添加分页逻辑 -->
+  {{ $paginator := .Paginate .Pages }}
+  
+  <!-- 文章列表容器 -->
+  <div class="term-articles">
+    {{ range $paginator.Pages }}
+      <!-- 单篇文章项 -->
+      <article class="term-article">
+        <!-- 文章标题和链接 -->
+        <h2 class="term-article-title">
+          <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+        </h2>
+        
+        <!-- 文章元信息 -->
+        <div class="term-article-meta">
+          <!-- 发布日期 -->
+          {{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+          {{ $dateHuman := .Date | time.Format ":date_long" }}
+          <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+          
+          <!-- 阅读时间 -->
+          {{ if .ReadingTime }}
+            <span class="term-article-divider">•</span>
+            <span class="term-article-readtime">{{ .ReadingTime }} 分钟阅读</span>
+          {{ end }}
+        </div>
+        
+        <!-- 文章摘要 -->
+        <!-- {{ if .Summary }}
+          <div class="term-article-summary">
+            {{ .Summary }}
+          </div>
+        {{ end }} -->
+        
+        <!-- 阅读更多链接 -->
+        <div class="term-article-more">
+          <a href="{{ .RelPermalink }}" class="term-article-more-link">阅读更多 →</a>
+        </div>
+      </article>
+    {{ end }}
+  </div>
+  
+  <!-- 添加分页导航 -->
+  {{ partial "paginator.html" . }}
 {{ end }}

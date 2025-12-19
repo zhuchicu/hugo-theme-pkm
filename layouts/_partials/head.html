@@ -1,5 +1,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title site.Title }}{{ end }}</title>
-{{ partialCached "head/css.html" . }}
-{{ partialCached "head/js.html" . }}
+<title>
+    {{ if .IsHome }}
+        {{ site.Title }}
+    {{ else }}
+        {{ printf "%s | %s" .Title site.Title }}
+    {{ end }}
+</title>
+
+<!-- SCSS 处理 -->
+{{ $scss := resources.Get "scss/app.scss" | toCSS | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $scss.RelPermalink }}">
+
+<!-- {{ print .RelPermalink }} -->
+{{ if eq .RelPermalink "/hierarchical/" }}
+    <!-- 引入脚本 -->
+    {{ $hierarchicalJS := resources.Get "js/hierarchical.js" | minify | fingerprint }}
+    <script defer src="{{ $hierarchicalJS.RelPermalink }}"></script>
+{{ end }}
+
+<!-- 复制代码按钮功能 -->
+{{ $mainJS := resources.Get "js/main.js" | minify | fingerprint }}
+<script defer src="{{ $mainJS.RelPermalink }}"></script>

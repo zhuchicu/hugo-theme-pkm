@@ -1,0 +1,79 @@
+{{ $recent := where site.RegularPages "Type" "in" (slice "post" "posts") | first 4 }}
+  {{ if $recent }}
+  <section class="recent-posts-grid">
+    <div class="section-header">
+      <h2 class="section-title">最新文章</h2>
+      <a href="{{ "/posts/" | relURL }}" class="view-all-link">
+        查看全部 <span class="arrow">→</span>
+      </a>
+    </div>
+    
+    <div class="posts-grid four-columns">
+      {{ range $recent }}
+      <article class="post-card">
+        {{ if .Params.image }}
+        <div class="post-image">
+          <a href="{{ .RelPermalink }}">
+            <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+          </a>
+        </div>
+        {{ end }}
+        
+        <div class="post-content">
+          <h3 class="post-title">
+            <a href="{{ .RelPermalink }}" title="{{ .Title }}">
+              {{ .Title | emojify | truncate 50 }}
+            </a>
+          </h3>
+          
+          <!-- <div class="post-excerpt">
+            {{ with .Description }}
+              {{ . | truncate 80 }}
+            {{ else }}
+              {{ .Summary | plainify | truncate 80 }}
+            {{ end }}
+          </div> -->
+          
+          <div class="post-meta">
+            <div class="meta-item">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+              </svg>
+              <time datetime="{{ .Date.Format "2006-01-02" }}">
+                {{ .Lastmod.Format "2006-01-02" }}
+              </time>
+            </div>
+            
+            {{ if .ReadingTime }}
+            <div class="meta-item">
+              <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+              </svg>
+              <span>{{ .ReadingTime }}分钟阅读</span>
+            </div>
+            {{ end }}
+          </div>
+          
+          <!-- {{ with .Params.tags }}
+          <div class="post-tags">
+            {{ range first 2 . }}
+              <a href="{{ printf "/tags/%s" . | urlize }}" class="tag">#{{ . }}</a>
+            {{ end }}
+            {{ if gt (len .) 2 }}
+              <span class="tag-more">+{{ sub (len .) 2 }}</span>
+            {{ end }}
+          </div>
+          {{ end }} -->
+          
+          <!-- <a href="{{ .RelPermalink }}" class="read-more-btn">
+            阅读文章
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+          </a> -->
+        </div>
+      </article>
+      {{ end }}
+    </div>
+  </section>
+{{ end }}

@@ -1,0 +1,188 @@
+.archive-year {
+  margin-bottom: calc(var(--spacing-unit) * 2);
+}
+
+.archive-year:not(:last-of-type) {
+    border-bottom: 2px solid var(--border);
+}
+
+.archive-year-header {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-unit);
+  padding-bottom: calc(var(--spacing-unit) / 2);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.archive-header-link {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.archive-header-link:hover {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.archive-count {
+  font-size: 14px;
+  color: var(--secondary-color);
+}
+
+.archive-month {
+  display: flex;
+  /* align-items: flex-start; */
+  align-items: baseline;
+  padding: 10px 0;
+}
+
+.archive-month-header {
+  margin: 25px 0;
+  width: 200px;
+}
+
+.archive-posts {
+  width: 100%;
+  font-size: 16px;
+}
+
+.archive-entry {
+  padding: 5px;
+  /* margin: 10px 0; */
+  position: relative;
+}
+
+.archive-entry-title {
+  margin: 5px 0;
+  font-weight: 400;
+}
+
+.entry-hint-parent {
+  display: flex;
+  justify-content: space-between;
+}
+
+.entry-hint {
+  display: inline-block;
+  margin-left: 0.3em;
+  vertical-align: middle;
+  color: var(--secondary-color);
+}
+
+.archive-meta {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  margin-bottom: calc(var(--spacing-unit) / 2);
+}
+
+.entry-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+/* 笔记网格布局 */
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-unit);
+  margin: var(--spacing-unit) 0;
+}
+
+/* 笔记卡片样式 */
+.note-card {
+  --border-color: #e2e8f0;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  // border-radius: 12px;
+  padding: calc(var(--spacing-unit) * 1.5);
+  transition: all 0.3s ease;
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.note-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* 笔记标题样式 */
+.note-title {
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: calc(var(--spacing-unit) / 2);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.note-title a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.note-title a:hover {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+/* 笔记摘要样式 */
+.note-summary {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: auto;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* 笔记元数据样式 */
+.note-meta {
+  margin-top: calc(var(--spacing-unit) * 1);
+  padding-top: calc(var(--spacing-unit) * 1);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+/* 笔记日期样式 */
+.note-date {
+  color: var(--secondary-color);
+}
+
+/* 笔记标签样式 */
+.note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.note-tags .tag {
+  color: var(--text-color);
+  background-color: var(--code-bg-color);
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.note-tags .tag:hover {
+  background-color: var(--border-color);
+  color: var(--primary-color);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .notes-grid {
+    grid-template-columns: 1fr;
+  }
+}

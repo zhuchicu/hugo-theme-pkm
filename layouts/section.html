@@ -1,8 +1,109 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
-  {{ .Content }}
-  {{ range .Pages }}
-    <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
-    {{ .Summary }}
+  <!-- 设置全局paginator变量，为notes类型明确指定每页显示数量 -->
+  {{ if eq .Type "posts" }}
+    {{ $dummy := .Paginate (where .Site.RegularPages "Type" "posts") }}
+  {{ else if eq .Type "notes" }}
+    {{ $dummy := .Paginate (where .Site.RegularPages "Type" "notes") 8 }}
+  {{ else }}
+    {{ $dummy := .Paginate .Pages }}
   {{ end }}
+  
+  <header class="page-header">
+    <h1>
+      {{ .Title }}<sup class="archive-count">&nbsp;{{ .Paginator.TotalNumberOfElements }}</sup>
+    </h1>
+  </header>
+
+  <!-- {{ printf "%#v" .Type  }} -->
+
+  {{ if eq .Type "posts" }}
+    {{ template "page-posts" . }}
+  {{ else if eq .Type "notes" }}
+    {{ template "page-notes" . }}
+  {{ end }}
+
+  <!-- 添加分页导航 -->
+  {{ partial "paginator.html" . }}
+{{ end }}
+
+
+{{ define "page-posts" }}
+  <!-- 使用主模板中已经设置的paginator -->
+  
+  <!-- 首先获取所有文章用于统计 -->
+  {{ $postsByYear := .Paginator.Pages.GroupByDate "2006" }}
+  {{ range $postsByYear }}
+    {{ $year := .Key }}
+    {{ $postsInYear := .Pages }}
+    <div class="archive-year">
+      <h2 class="archive-year-header" id="{{ $year }}">
+        <a class="archive-header-link" href="#{{ $year }}">{{ $year }}</a>
+        <sup class="archive-count">&nbsp;{{ len $postsInYear }}</sup>
+      </h2>
+      {{ $postsByMonth := $postsInYear.GroupByDate "January 2006" }}
+      {{ range $postsByMonth }}
+        {{ $month := .Key }}
+        {{ $postsInMonth := .Pages }}
+        <div class="archive-month">
+          <h3 class="archive-month-header" id="{{ $year }}-{{ index (split $month " ") 0 }}">
+            <a class="archive-header-link" href="#{{ $year }}-{{ index (split $month " ") 0 }}">{{ index (split $month " ") 0 }}</a>
+            <sup class="archive-count">&nbsp;{{ len $postsInMonth }}</sup>
+          </h3>
+          <div class="archive-posts">
+            {{ range $postsInMonth }}
+              <div class="archive-entry">
+                <h3 class="archive-entry-title entry-hint-parent">{{ .Title }}
+                  {{ if .Draft }}
+                  <span class="entry-hint" title="Draft">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 -960 960 960" fill="currentColor">
+                      <path d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"></path>
+                    </svg>
+                  </span>
+                  {{ end }}
+                </h3>
+                <div class="archive-meta"><span title="{{ .Date.Format "2006-01-02 15:04:05 +0000 UTC" }}">{{ .Date.Format "January 2, 2006" }}</span>&nbsp;·&nbsp;{{ .ReadingTime }} min</div>
+                <a class="entry-link" aria-label="post link to {{ .Title }}" href="{{ .RelPermalink }}"></a>
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
+{{ end }}
+
+
+{{ define "page-notes" }}
+  <!-- 笔记列表显示 -->
+  <div class="notes-grid">
+    {{ range .Paginator.Pages }}
+      <article class="note-card">
+        <h2 class="note-title entry-hint-parent">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{ if .Draft }}
+          <span class="entry-hint" title="Draft">
+            <svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 -960 960 960" fill="currentColor">
+              <path d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"></path>
+            </svg>
+          </span>
+          {{ end }}
+        </h2>
+        {{ if .Summary }}
+          <div class="note-summary">{{ .Summary | plainify | truncate 120 }}</div>
+        {{ end }}
+        <div class="note-meta">
+          {{ if .Date }}
+            <span class="note-date">{{ .Lastmod.Format "2006-01-02" }}</span>
+          {{ end }}
+          {{ if .Params.tags }}
+            <div class="note-tags">
+              {{ range .Params.tags }}
+                <a href="{{ "tags/" | relLangURL }}{{ . | urlize }}" class="tag">{{ . }}</a>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </article>
+    {{ end }}
+  </div>
 {{ end }}

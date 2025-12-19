@@ -1,0 +1,356 @@
+/* ===== 目录切换按钮 ===== */
+
+.toc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  backdrop-filter: blur(4px);
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: #111827;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  // 深色模式支持
+  @media (prefers-color-scheme: dark) {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #f3f4f6;
+  }
+}
+
+.toc-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.toc-toggle:active {
+  transform: scale(0.95);
+}
+
+/* ===== 目录侧边栏 ===== */
+.toc-sidebar {
+  width: 340px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 50;
+  border-right: 1px solid #e2e8f0;
+  // 深色模式支持
+  @media (prefers-color-scheme: dark) {
+    background: #1f2937;
+    border-right: 1px solid #374151;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// 目录标题栏 - 优化版
+.toc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  position: relative;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  
+  // 深色模式支持
+  @media (prefers-color-scheme: dark) {
+    border-bottom: 1px solid #374151;
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// 文章目录标题 - 优化版
+.toc-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.025em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  animation: slideIn 0.4s ease-out;
+  
+  // 深色模式支持
+  @media (prefers-color-scheme: dark) {
+    color: #f3f4f6;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  // 添加标题前的装饰图标
+  &::before {
+    content: "📑";
+    font-size: 1.2rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+}
+
+// 关闭按钮 - 方正版
+.toc-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  padding: 0.4rem; /* 调整内边距，确保按钮方正 */
+  border-radius: 0.25rem; /* 进一步减小圆角，使按钮更方正 */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 2rem; /* 确保宽高完全相等 */
+  height: 2rem; /* 使用固定值确保方形 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  overflow: visible; /* 防止内容溢出影响形状 */
+  
+  // 添加关闭图标
+  &::before {
+    content: "×";
+    font-size: 1.1rem; /* 进一步减小图标尺寸 */
+    font-weight: 600; /* 调整字重，使图标更清晰 */
+    color: #4b5563;
+    line-height: 1;
+    transition: color 0.3s ease;
+  }
+  
+  // 悬停效果
+  &:hover {
+    background: white;
+    transform: scale(1.05) translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: #cbd5e1;
+    
+    &::before {
+      color: #111827;
+      transform: rotate(90deg);
+    }
+  }
+  
+  // 点击效果
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  // 键盘焦点样式
+  &:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  // 深色模式支持
+  @media (prefers-color-scheme: dark) {
+    background: rgba(31, 41, 55, 0.8);
+    border-color: #374151;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    
+    &::before {
+      color: #d1d5db;
+    }
+    
+    &:hover {
+      background: #374151;
+      border-color: #4b5563;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      
+      &::before {
+        color: #ffffff;
+      }
+    }
+    
+    &:focus-visible {
+      outline-color: #60a5fa;
+    }
+  }
+  
+  // 响应式设计
+  @media (max-width: 640px) {
+    padding: 0.35rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    
+    &::before {
+      font-size: 1rem;
+    }
+  }
+}
+
+// 标题滑入动画
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===== 目录内容 ===== */
+.toc {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  // 自定义滚动条
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    @media (prefers-color-scheme: dark) {
+      background: #2d3748;
+    }
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #c5c5c5;
+    border-radius: 3px;
+    @media (prefers-color-scheme: dark) {
+      background: #4a5568;
+    }
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+    @media (prefers-color-scheme: dark) {
+      background: #718096;
+    }
+  }
+}
+
+.toc ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.toc li {
+  margin-bottom: 0.25rem;
+}
+
+// 目录层级样式
+.toc ul ul {
+  padding-left: 1rem;
+  margin-top: 0.25rem;
+}
+
+.toc a {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  color: #4b5563;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  // 深色模式支持
+  @media (prefers-color-scheme: dark) {
+    color: #d1d5db;
+  }
+}
+
+.toc a:hover {
+  color: #111827;
+  background-color: #f3f4f6;
+  // 深色模式支持
+  @media (prefers-color-scheme: dark) {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+// 当前活跃章节高亮
+.toc a.active {
+  color: #111827;
+  font-weight: 500;
+  background-color: #e5e7eb;
+  // 深色模式支持
+  @media (prefers-color-scheme: dark) {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ===== 遮罩层 ===== */
+.toc-overlay {
+  backdrop-filter: blur(2px);
+}
+
+/* ===== 响应式设计 ===== */
+@media (max-width: 640px) {
+  .toc-sidebar {
+    width: 100%;
+  }
+}
+
+/* ===== 动画效果 ===== */
+/* 标题脉冲动画 */
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) both;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 目录项过渡效果增强 */
+.toc a {
+  transition: all 0.2s ease-in-out;
+}
+
+/* 侧边栏过渡效果增强 */
+.toc-sidebar {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 遮罩层过渡效果增强 */
+.toc-overlay {
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 按钮交互反馈 */
+.toc-toggle:active,
+.toc-close:active {
+  transform: scale(0.95);
+}
+
+/* 目录滚动条美化 */
+.toc {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f7fafc;
+  
+  @media (prefers-color-scheme: dark) {
+    scrollbar-color: #4a5568 #2d3748;
+  }
+}

@@ -1,7 +1,24 @@
 {{ define "main" }}
   <h1>{{ .Title }}</h1>
-  {{ .Content }}
-  {{ range .Pages }}
-    <h2><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></h2>
-  {{ end }}
+  <ul class="terms-tags">
+    {{ if eq .Section "categories" }}
+      {{ $categories := site.Taxonomies.categories }}
+      {{ range $category, $pages := $categories }}
+        <li>
+            <a href="{{ $.Site.BaseURL }}categories/{{ $category | urlize }}/">
+              {{ $category }} <sup><strong><sup>{{ $pages.Count }}</sup></strong></sup>
+            </a>
+        </li>
+      {{ end }}
+    {{ else if eq .Section "tags" }}
+      {{ $tags := site.Taxonomies.tags }}
+      {{ range $tag, $pages := $tags }}
+        <li>
+            <a href="{{ $.Site.BaseURL }}tags/{{ $tag | urlize }}/">
+              {{ $tag }} <sup><strong><sup>{{ $pages.Count }}</sup></strong></sup>
+            </a>
+        </li>
+      {{ end }}
+    {{ end }}
+  </ul>
 {{ end }}
